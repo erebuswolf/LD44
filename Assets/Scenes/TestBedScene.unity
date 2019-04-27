@@ -554,9 +554,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xWalkMovementScaling: 3
-  xSprintMovementScaling: 8
-  xAirWalkMovementScaling: 1.5
-  xAirSprintMovementScaling: 4
+  xSprintMovementScaling: 6
+  xGroundAccel: 1
+  xAirAccel: 0.3
+  xAirWalkMovementScaling: 3
+  xAirSprintMovementScaling: 6
   maxEndWallClingFrames: 10
   touchingWallDetection: {fileID: 1723793958}
   fallingComponent: {fileID: 2136788833}
@@ -836,7 +838,7 @@ MonoBehaviour:
   maxGravDisableFrames: 5
   minGravDisableFrames: 2
   jumpForce: 200
-  jumpHoldForce: 50
+  jumpHoldForce: 60
 --- !u!1 &2068869065
 GameObject:
   m_ObjectHideFlags: 0

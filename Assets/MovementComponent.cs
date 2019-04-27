@@ -9,7 +9,13 @@ public class MovementComponent : MonoBehaviour
     float xWalkMovementScaling = 1;
     [SerializeField]
     float xSprintMovementScaling = 3;
-    
+
+    [SerializeField]
+    float xGroundAccel = 1;
+
+    [SerializeField]
+    float xAirAccel = .5f;
+
     [SerializeField]
     float xAirWalkMovementScaling = 1;
     [SerializeField]
@@ -70,12 +76,25 @@ public class MovementComponent : MonoBehaviour
         } else {
             ForceWallClingEnd();
         }
-        if (groundedComponent.Grounded) {
-            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(currentX * (currentSprintbool ? xSprintMovementScaling : xWalkMovementScaling), oldVel.y);
-        } else {
-            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(currentX * (currentSprintbool ? xAirSprintMovementScaling : xAirWalkMovementScaling), oldVel.y);
-        }
 
+
+        float MoveToUse;
+        float accelToUse;
+
+        if (groundedComponent.Grounded) {
+            MoveToUse = currentSprintbool ? xSprintMovementScaling : xWalkMovementScaling;
+            accelToUse = xGroundAccel;
+        } else {
+            MoveToUse = currentSprintbool ? xAirSprintMovementScaling : xAirWalkMovementScaling;
+            accelToUse = xAirAccel;
+        }
+        
+        Vector2 target = new Vector2(currentX * MoveToUse, oldVel.y);
+
+        if (Mathf.Abs(target.x - oldVel.x) >= accelToUse) {
+            target = new Vector2(Mathf.Sign(target.x - oldVel.x) * accelToUse + oldVel.x, target.y);
+        }
+        gameObject.GetComponent<Rigidbody2D>().velocity = target;
         
     }
 

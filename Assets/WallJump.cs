@@ -21,6 +21,7 @@ public class WallJump : MonoBehaviour
 
     bool JumpPressed;
     bool JumpReleased;
+    bool ReleasedSinceClinging;
 
     [SerializeField]
     int maxGravDisableFrames = 5;
@@ -28,6 +29,8 @@ public class WallJump : MonoBehaviour
     [SerializeField]
     int minGravDisableFrames = 2;
     int currentGraveDisableFrames;
+
+    bool jumpingFromRight;
 
     [SerializeField]
     float jumpForce = 5;
@@ -40,22 +43,25 @@ public class WallJump : MonoBehaviour
     {
         
     }
-    
+
 
     // Update is called once per frame
-    void Update()
-    {
-        if (movementComponent.WallClinging && JumpReleased) {
+    void Update() {
+        if (movementComponent.WallClinging && ReleasedSinceClinging) {
             canJump = Time.time - lastJumpTime > jumpTimeout;
-            if (Input.GetAxis("Jump") != 0) {
+            if (Input.GetAxis("Jump") != 0 && canJump) {
                 JumpPressed = true;
             }
         }
 
-        if (Input.GetAxis("Jump") == 0 && movementComponent.WallClinging) {
+        if (Input.GetAxis("Jump") == 0) { 
             JumpReleased = true;
+        }
+
+        if (Input.GetAxis("Jump") == 0 && movementComponent.WallClinging) {
+            ReleasedSinceClinging = true;
         } else {
-            JumpReleased = false;
+            ReleasedSinceClinging = false;
         }
 
     }
@@ -71,10 +77,11 @@ public class WallJump : MonoBehaviour
     void Jump() {
         JumpReleased = false;
         JumpPressed = false;
+        ReleasedSinceClinging = false;
         Vector2 oldVel = GetComponentInParent<Rigidbody2D>().velocity;
         GetComponentInParent<Rigidbody2D>().velocity = new Vector2(oldVel.x, 0);
-        float xComp = touchingWallDetection.TouchingWallOnRight() ? -1 : 1;
-
+        jumpingFromRight = touchingWallDetection.TouchingWallOnRight();
+        float xComp = jumpingFromRight ? -1 : 1;
         GetComponentInParent<Rigidbody2D>().AddForce(new Vector2(xComp* hozVal, 1) * jumpForce);
 
         lastJumpTime = Time.time;
@@ -84,7 +91,8 @@ public class WallJump : MonoBehaviour
     void HandlebonusJump() {
         if ((!JumpReleased && currentGraveDisableFrames <= maxGravDisableFrames) || currentGraveDisableFrames < minGravDisableFrames) {
             currentGraveDisableFrames++;
-            GetComponentInParent<Rigidbody2D>().AddForce(new Vector2(0, 1) * jumpHoldForce);
+            float xComp = jumpingFromRight ? -1 : 1;
+            GetComponentInParent<Rigidbody2D>().AddForce(new Vector2(xComp * hozVal, 1) * jumpHoldForce);
         }
     }
 }
