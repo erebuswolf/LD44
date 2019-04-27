@@ -9,12 +9,13 @@ public class FallingComponent : MonoBehaviour {
     [SerializeField]
     float fallAccel = 1f;
 
-    bool ShouldFall = true;
+    public bool ShouldFall { get; set; }
 
     List<Collider2D> trackedGroundObjects = new List<Collider2D>();
 
     // Start is called before the first frame update
     void Start() {
+        ShouldFall = true;
         groundCollision = GetComponent<BoxCollider2D>();
     }
 
@@ -35,18 +36,19 @@ public class FallingComponent : MonoBehaviour {
 
     }
 
-    public void SetShouldFall(bool shouldFall) {
-        ShouldFall = shouldFall;
-    }
-
     // Update is called once per frame
     void FixedUpdate() {
-        if (!grounded && ShouldFall) {
+        if (!grounded) {
             Fall();
         }
     }
     
     void Fall() {
-        GetComponentInParent<Rigidbody2D>().velocity = GetComponentInParent<Rigidbody2D>().velocity + (new Vector2(0, -1) * fallAccel);
+        var startVel = GetComponentInParent<Rigidbody2D>().velocity;
+        startVel = startVel + (new Vector2(0, -1) * fallAccel);
+        if (!ShouldFall && startVel.y < 0) {
+            startVel = new Vector2(startVel.x, 0);
+        }
+        GetComponentInParent<Rigidbody2D>().velocity = startVel;
     }
 }

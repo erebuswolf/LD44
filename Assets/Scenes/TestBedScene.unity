@@ -555,7 +555,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xWalkMovementScaling: 3
   xSprintMovementScaling: 8
+  xAirWalkMovementScaling: 1.5
+  xAirSprintMovementScaling: 4
+  maxEndWallClingFrames: 10
   touchingWallDetection: {fileID: 1723793958}
+  fallingComponent: {fileID: 2136788833}
+  groundedComponent: {fileID: 2136788832}
 --- !u!1 &1269332508
 GameObject:
   m_ObjectHideFlags: 0
@@ -824,12 +829,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dbb804ea145acb46bc2ea43ba4d1f85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementComponent: {fileID: 1047102659}
+  touchingWallDetection: {fileID: 1723793958}
   jumpTimeout: 0.1
+  hozVal: 0.5
   maxGravDisableFrames: 5
   minGravDisableFrames: 2
-  fallAccel: 1
-  jumpForce: 5
-  jumpHoldForce: 5
+  jumpForce: 200
+  jumpHoldForce: 50
 --- !u!1 &2068869065
 GameObject:
   m_ObjectHideFlags: 0
@@ -952,7 +959,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2068869065}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.65, y: -1.89, z: -1.3737262}
+  m_LocalPosition: {x: 2.37, y: -1.89, z: -1.3737262}
   m_LocalScale: {x: 1, y: 300, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
