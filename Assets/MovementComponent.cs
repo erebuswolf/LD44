@@ -10,10 +10,15 @@ public class MovementComponent : MonoBehaviour
     [SerializeField]
     float xSprintMovementScaling = 3;
 
+    LayerMask wallLayerMask;
+
+    [SerializeField]
+    TouchingWallDetection touchingWallDetection;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        wallLayerMask = LayerMask.GetMask(new string[] { "Wall" });
     }
 
     // Update is called once per frame
@@ -28,8 +33,14 @@ public class MovementComponent : MonoBehaviour
         float currentX = Input.GetAxis("Horizontal");
         currentX = currentX != 0 ? Mathf.Sign(currentX) : 0;
         Vector2 oldVel = gameObject.GetComponent<Rigidbody2D>().velocity;
+        if (touchingWallDetection.TouchingWall) {
+            if(touchingWallDetection.TouchingWallOnRight()) {
+                currentX = Mathf.Clamp(currentX, -1, 0);
+            } else {
+                currentX = Mathf.Clamp(currentX, 0, 1);
+            }
+        }
         gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(currentX * (currentSprintbool ? xSprintMovementScaling : xWalkMovementScaling), oldVel.y);
-
-
     }
+    
 }

@@ -2,8 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JumpComponent : MonoBehaviour
+public class WallJump : MonoBehaviour
 {
+
+    //Stop horizontal movement away from the wall for 2 frames
+
+    //allow player to for wall jumping for the 2 frames the player is holding away from the wall.
+
+
+    bool onWall;
     bool canJump;
     float lastJumpTime = 0;
 
@@ -13,7 +20,6 @@ public class JumpComponent : MonoBehaviour
     bool JumpPressed;
     bool JumpReleased;
 
-
     [SerializeField]
     int maxGravDisableFrames = 5;
 
@@ -21,46 +27,60 @@ public class JumpComponent : MonoBehaviour
     int minGravDisableFrames = 2;
 
     int currentGraveDisableFrames;
-    
+
+    [SerializeField]
+    float fallAccel = 1f;
+
     [SerializeField]
     float jumpForce = 5;
 
     [SerializeField]
     float jumpHoldForce = 5;
 
-    GroundedComponenet groundedComponenet;
+    List<Collider2D> trackedGroundObjects = new List<Collider2D>();
 
     // Start is called before the first frame update
     void Start()
     {
-        groundedComponenet = GetComponent<GroundedComponenet>();
+        
     }
 
-    private void UpdateCanJump() {
-        canJump = (groundedComponenet.Grounded) && Time.time - lastJumpTime > jumpTimeout && JumpReleased == true;
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall")) {
+            onWall = true;
+            trackedGroundObjects.Add(collision);
+            JumpReleased = false;
+        }
     }
-    
-    private void Update() {
+
+    private void OnTriggerExit2D(Collider2D collision) {
+        if (trackedGroundObjects.Remove(collision) && trackedGroundObjects.Count == 0) {
+            onWall = false;
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         if (Input.GetAxis("Jump") == 0) {
             JumpReleased = true;
         }
-
-        if (groundedComponenet.Grounded && JumpReleased) {
-            UpdateCanJump();
-            if (Input.GetAxis("Jump") != 0 && canJump) {
+        if (onWall && JumpReleased) {
+            onWall = true;
+            canJump = Time.time - lastJumpTime > jumpTimeout;
+            if (Input.GetAxis("Jump") != 0) {
                 JumpPressed = true;
             }
         }
     }
 
     // Update is called once per frame
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         if (JumpPressed) {
             Jump();
         }
-        if (!groundedComponenet.Grounded) {
-            HandleBonusJump();
+        if (!onWall) {
+            HandlebonusJump();
         }
     }
 
@@ -74,7 +94,7 @@ public class JumpComponent : MonoBehaviour
         currentGraveDisableFrames = 0;
     }
 
-    void HandleBonusJump() {
+    void HandlebonusJump() {
         if ((!JumpReleased && currentGraveDisableFrames <= maxGravDisableFrames) || currentGraveDisableFrames < minGravDisableFrames) {
             currentGraveDisableFrames++;
             GetComponentInParent<Rigidbody2D>().AddForce(new Vector2(0, 1) * jumpHoldForce);
