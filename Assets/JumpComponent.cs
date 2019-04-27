@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class JumpComponent : MonoBehaviour
 {
-    bool canJump;
     float lastJumpTime = 0;
 
     [SerializeField]
     float jumpTimeout = .1f;
 
     bool JumpPressed;
-    bool JumpReleased;
+    bool JumpReleasedForJumpheight;
+    bool JumpReleasedForJumpStart;
 
 
     [SerializeField]
@@ -36,18 +36,20 @@ public class JumpComponent : MonoBehaviour
         groundedComponenet = GetComponent<GroundedComponenet>();
     }
 
-    private void UpdateCanJump() {
-        canJump = (groundedComponenet.Grounded) && Time.time - lastJumpTime > jumpTimeout && JumpReleased == true;
+    private bool CanJump() {
+        return (groundedComponenet.Grounded) && Time.time - lastJumpTime > jumpTimeout && JumpReleasedForJumpStart;
     }
     
     private void Update() {
         if (Input.GetAxis("Jump") == 0) {
-            JumpReleased = true;
+            JumpReleasedForJumpheight = true;
+            if (groundedComponenet.Grounded) {
+                JumpReleasedForJumpStart = true;
+            }
         }
 
-        if (groundedComponenet.Grounded && JumpReleased) {
-            UpdateCanJump();
-            if (Input.GetAxis("Jump") != 0 && canJump) {
+        if (groundedComponenet.Grounded && JumpReleasedForJumpheight) {
+            if (Input.GetAxis("Jump") != 0 && CanJump()) {
                 JumpPressed = true;
             }
         }
@@ -65,8 +67,9 @@ public class JumpComponent : MonoBehaviour
     }
 
     void Jump() {
-        JumpReleased = false;
+        JumpReleasedForJumpheight = false;
         JumpPressed = false;
+        JumpReleasedForJumpStart = false;
         Vector2 oldVel = GetComponentInParent<Rigidbody2D>().velocity;
         GetComponentInParent<Rigidbody2D>().velocity = new Vector2(oldVel.x, 0);
         GetComponentInParent<Rigidbody2D>().AddForce(new Vector2(0, 1) * jumpForce);
@@ -75,7 +78,7 @@ public class JumpComponent : MonoBehaviour
     }
 
     void HandleBonusJump() {
-        if ((!JumpReleased && currentGraveDisableFrames <= maxGravDisableFrames) || currentGraveDisableFrames < minGravDisableFrames) {
+        if ((!JumpReleasedForJumpheight && currentGraveDisableFrames <= maxGravDisableFrames) || currentGraveDisableFrames < minGravDisableFrames) {
             currentGraveDisableFrames++;
             GetComponentInParent<Rigidbody2D>().AddForce(new Vector2(0, 1) * jumpHoldForce);
         }
