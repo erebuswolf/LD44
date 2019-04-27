@@ -9,6 +9,9 @@ public class FallingComponent : MonoBehaviour {
     [SerializeField]
     float fallAccel = 1f;
 
+    [SerializeField]
+    float maxFallSpeed = -30f;
+
     public bool ShouldFall { get; set; }
 
     List<Collider2D> trackedGroundObjects = new List<Collider2D>();
@@ -46,6 +49,9 @@ public class FallingComponent : MonoBehaviour {
     void Fall() {
         var startVel = GetComponentInParent<Rigidbody2D>().velocity;
         startVel = startVel + (new Vector2(0, -1) * fallAccel);
+        if (startVel.y < maxFallSpeed) {
+            startVel.y = maxFallSpeed;
+        }
         if (!ShouldFall && startVel.y < 0) {
             startVel = new Vector2(startVel.x, 0);
         }
