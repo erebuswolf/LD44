@@ -13,6 +13,7 @@ public class JumpComponent : MonoBehaviour
     bool JumpReleasedForJumpheight = true;
     bool JumpReleasedForJumpStart = true;
 
+    bool disableMovement;
 
     [SerializeField]
     int maxGravDisableFrames = 5;
@@ -40,7 +41,19 @@ public class JumpComponent : MonoBehaviour
         return (groundedComponenet.Grounded) && Time.time - lastJumpTime > jumpTimeout && JumpReleasedForJumpStart;
     }
     
+    public void KillPlayer() {
+        disableMovement = true;
+    }
+
+    public void RespawnPlayer() {
+        disableMovement = false;
+    }
+
     private void Update() {
+        if (disableMovement) {
+            return;
+        }
+
         if (Input.GetAxis("Jump") == 0) {
             JumpReleasedForJumpheight = true;
             if (groundedComponenet.Grounded) {
@@ -58,6 +71,10 @@ public class JumpComponent : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (disableMovement) {
+            return;
+        }
+
         if (JumpPressed) {
             Jump();
         }

@@ -6,6 +6,8 @@ abstract public class Pickup : MonoBehaviour
 {
     bool overlapping;
 
+    public string ID { get; protected set; }
+
     protected bool pickedUp;
 
     protected List<Collider2D> overlaps = new List<Collider2D>();
@@ -36,7 +38,7 @@ abstract public class Pickup : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        ID = "default ID";
     }
 
     // Update is called once per frame

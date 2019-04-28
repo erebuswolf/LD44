@@ -22,7 +22,7 @@ public class SprintPickup : Pickup
     // Start is called before the first frame update
     void Start()
     {
-        
+        ID = "SprintPickup";
     }
 
     // Update is called once per frame

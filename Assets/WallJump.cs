@@ -43,17 +43,19 @@ public class WallJump : MonoBehaviour
     
     [SerializeField]
     float useCost = .5f;
-
-    [SerializeField]
+    
     EnergyComponent energyComponent;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        energyComponent = GetComponentInParent<EnergyComponent>();
     }
 
     public bool ActivateWallJump() {
+        if (energyComponent == null) {
+            energyComponent = GetComponentInParent<EnergyComponent>();
+        }
         if (energyComponent.SpendEnergy(ActivationCost)) {
             this.enabled = true;
             movementComponent.CanWallStick = true;

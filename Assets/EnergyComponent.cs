@@ -23,6 +23,14 @@ public class EnergyComponent : MonoBehaviour
         CurrentEnergy = MaxEnergy;
     }
 
+    public float GetCurrentEnergy() {
+        return CurrentEnergy;
+    }
+
+    public void RestoreEnergy() {
+        CurrentEnergy = MaxEnergy;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -33,15 +41,25 @@ public class EnergyComponent : MonoBehaviour
         currentDrainAmount =+ baseDrainAmount;
     }
 
-    public bool SpendEnergy(float drainAmount) {
+    public bool SpendEnergy(float drainAmount, bool force = false) {
         if(!ShouldDrainEnergy) {
             return true;
         }
-        if (CurrentEnergy > drainAmount) {
-            CurrentEnergy -= drainAmount;
-            return true;
+        if (CurrentEnergy < drainAmount && !force) {
+            return false;
         }
-        return false;
+        CurrentEnergy -= drainAmount;
+        return true;
+    }
+
+    private void CheckDeath() {
+        if (CurrentEnergy < 0) {
+            GetComponent<DeathComponent>().PlayerDies();
+        }
+    }
+
+    public void RespawnPlayer() {
+        RestoreEnergy();
     }
 
     private void FixedUpdate() {
@@ -49,5 +67,6 @@ public class EnergyComponent : MonoBehaviour
         if (ShouldDrainEnergy) {
             CurrentEnergy -= currentDrainAmount;
         }
+        CheckDeath();
     }
 }

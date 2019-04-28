@@ -47,13 +47,21 @@ public class MovementComponent : MonoBehaviour
     [SerializeField]
     GroundedComponenet groundedComponent;
     
-    [SerializeField]
     EnergyComponent energyComponent;
 
     // Start is called before the first frame update
     void Start()
     {
         wallLayerMask = LayerMask.GetMask(new string[] { "Wall" });
+        energyComponent = GetComponent<EnergyComponent>();
+    }
+
+    public void KillPlayer() {
+        disableMovement = true;
+    }
+
+    public void RespawnPlayer() {
+        disableMovement = false;
     }
 
     public bool ActivateSprint() {
@@ -66,14 +74,18 @@ public class MovementComponent : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        if (disableMovement) {
-            return;
-        }
 
         float currentSprintAxis = Input.GetAxis("Sprint");
         bool currentSprintbool = currentSprintAxis != 0 && CanSprint;
 
         float currentX = Input.GetAxis("Horizontal");
+
+
+        if (disableMovement) {
+            currentSprintbool = false;
+            currentX = 0;
+        }
+
         currentX = currentX != 0 ? Mathf.Sign(currentX) : 0;
         Vector2 oldVel = gameObject.GetComponent<Rigidbody2D>().velocity;
         if(CanWallStick) {

@@ -2,8 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WallJumpPickup : Pickup
+public class RespawnPoint : Pickup
 {
+    [SerializeField]
+    GameObject RespawnPosition;
+
+    public GameObject GetRespawnPosition() {
+        return RespawnPosition;
+    }
 
     protected override void TriggerEndOverlapAnimation() {
     }
@@ -12,25 +18,19 @@ public class WallJumpPickup : Pickup
     }
 
     protected override void TriggerPickupLogic() {
-        if (pickedUp) {
-            return;
-        }
         var player = overlaps[0].GetComponentInParent<MovementComponent>().gameObject;
-        if (player.GetComponentInChildren<WallJump>().ActivateWallJump()) {
-            pickedUp = true;
-        }
+        player.GetComponentInChildren<EnergyComponent>().RestoreEnergy();
+        player.GetComponentInChildren<RespawningComponent>().SetLastSave(this);
     }
-
     // Start is called before the first frame update
     void Start()
     {
-        ID = "WallJumpPickup";
+        
     }
 
     // Update is called once per frame
-    new void Update()
+    void Update()
     {
-
-        base.Update();
+        
     }
 }
