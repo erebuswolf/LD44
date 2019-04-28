@@ -18,10 +18,12 @@ public class RespawnPoint : Pickup
     }
 
     protected override void TriggerPickupLogic() {
+        Debug.LogWarning("picked up start");
         var player = overlaps[0].GetComponentInParent<MovementComponent>().gameObject;
         player.GetComponentInChildren<EnergyComponent>().RestoreEnergy();
         player.GetComponentInChildren<RespawningComponent>().SetLastSave(this);
     }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,8 +31,8 @@ public class RespawnPoint : Pickup
     }
 
     // Update is called once per frame
-    void Update()
+    new void Update()
     {
-        
+        base.Update();
     }
 }
