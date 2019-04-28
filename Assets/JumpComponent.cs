@@ -9,9 +9,9 @@ public class JumpComponent : MonoBehaviour
     [SerializeField]
     float jumpTimeout = .1f;
 
-    bool JumpPressed;
-    bool JumpReleasedForJumpheight;
-    bool JumpReleasedForJumpStart;
+    bool JumpPressed = false;
+    bool JumpReleasedForJumpheight = true;
+    bool JumpReleasedForJumpStart = true;
 
 
     [SerializeField]

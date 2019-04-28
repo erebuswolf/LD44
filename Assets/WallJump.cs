@@ -19,16 +19,16 @@ public class WallJump : MonoBehaviour
     [SerializeField]
     float hozVal = .2f;
 
-    bool JumpPressed;
-    bool JumpReleased;
-    bool ReleasedSinceClinging;
+    bool JumpPressed = false;
+    bool JumpReleased = true;
+    bool ReleasedSinceClinging = false;
 
     [SerializeField]
     int maxGravDisableFrames = 5;
 
     [SerializeField]
     int minGravDisableFrames = 2;
-    int currentGraveDisableFrames;
+    int currentGraveDisableFrames = 100;
 
     bool jumpingFromRight;
 

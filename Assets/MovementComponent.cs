@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class MovementComponent : MonoBehaviour
 {
+    public bool CanSprint { get; set; }
+
+    public bool CanWallStick { get; set; }
+
+
     bool disableMovement;
     [SerializeField]
     float xWalkMovementScaling = 1;
@@ -51,32 +56,33 @@ public class MovementComponent : MonoBehaviour
         }
 
         float currentSprintAxis = Input.GetAxis("Sprint");
-        bool currentSprintbool = currentSprintAxis != 0;
+        bool currentSprintbool = currentSprintAxis != 0 && CanSprint;
 
         float currentX = Input.GetAxis("Horizontal");
         currentX = currentX != 0 ? Mathf.Sign(currentX) : 0;
         Vector2 oldVel = gameObject.GetComponent<Rigidbody2D>().velocity;
-        if (touchingWallDetection.TouchingWall && !groundedComponent.Grounded) {
-            if (touchingWallDetection.TouchingWallOnRight()) {
-                if (currentX > 0) {
-                    StartWallcling();
+        if(CanWallStick) {
+            if (touchingWallDetection.TouchingWall && !groundedComponent.Grounded) {
+                if (touchingWallDetection.TouchingWallOnRight()) {
+                    if (currentX > 0) {
+                        StartWallcling();
+                    } else {
+                        EndWallcling();
+                    }
                 } else {
-                    EndWallcling();
+                    if (currentX < 0) {
+                        StartWallcling();
+                    } else {
+                        EndWallcling();
+                    }
+                }
+                if (WallClinging) {
+                    return;
                 }
             } else {
-                if (currentX < 0) {
-                    StartWallcling();
-                } else {
-                    EndWallcling();
-                }
+                ForceWallClingEnd();
             }
-            if (WallClinging) {
-                return;
-            }
-        } else {
-            ForceWallClingEnd();
         }
-
 
         float MoveToUse;
         float accelToUse;
