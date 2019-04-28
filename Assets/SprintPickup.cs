@@ -11,7 +11,12 @@ public class SprintPickup : Pickup
     }
 
     protected override void TriggerPickupLogic() {
-        overlaps[0].GetComponentInParent<MovementComponent>().CanSprint = true;
+        if (pickedUp) {
+            return;
+        }
+        if(overlaps[0].GetComponentInParent<MovementComponent>().ActivateSprint()) {
+            pickedUp = true;
+        }
     }
 
     // Start is called before the first frame update

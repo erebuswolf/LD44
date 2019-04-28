@@ -37,19 +37,36 @@ public class WallJump : MonoBehaviour
 
     [SerializeField]
     float jumpHoldForce = 5;
+
+    [SerializeField]
+    float ActivationCost = 30;
     
+    [SerializeField]
+    float useCost = .5f;
+
+    [SerializeField]
+    EnergyComponent energyComponent;
+
     // Start is called before the first frame update
     void Start()
     {
         
     }
 
+    public bool ActivateWallJump() {
+        if (energyComponent.SpendEnergy(ActivationCost)) {
+            this.enabled = true;
+            movementComponent.CanWallStick = true;
+            return true;
+        }
+        return false;
+    }
 
     // Update is called once per frame
     void Update() {
         if (movementComponent.WallClinging && ReleasedSinceClinging) {
             canJump = Time.time - lastJumpTime > jumpTimeout;
-            if (Input.GetAxis("Jump") != 0 && canJump) {
+            if (Input.GetAxis("Jump") != 0 && canJump && energyComponent.SpendEnergy(useCost)) {
                 JumpPressed = true;
             }
         }

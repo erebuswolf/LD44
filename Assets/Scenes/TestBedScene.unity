@@ -730,6 +730,7 @@ Transform:
   - {fileID: 785294965}
   - {fileID: 1723793956}
   - {fileID: 1959579806}
+  - {fileID: 1396254551}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -752,9 +753,11 @@ MonoBehaviour:
   xAirWalkMovementScaling: 3
   xAirSprintMovementScaling: 6
   maxEndWallClingFrames: 10
+  ActivationCost: 20
   touchingWallDetection: {fileID: 1723793958}
   fallingComponent: {fileID: 2136788833}
   groundedComponent: {fileID: 2136788832}
+  energyComponent: {fileID: 1396254552}
 --- !u!1 &1150567698
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,7 +880,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1150567698}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.88, y: -0.69, z: -1.3737262}
+  m_LocalPosition: {x: -6.89, y: -0.69, z: -1.3737262}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1165,6 +1168,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1396254550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1396254551}
+  - component: {fileID: 1396254552}
+  m_Layer: 9
+  m_Name: EnergyComponent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1396254551
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1396254550}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1047102658}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1396254552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1396254550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8983090daa7f5c74b8e0eab5f00a36e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentEnergy: 100
+  MaxEnergy: 100
+  baseDrainAmount: 0.01
 --- !u!1 &1528339247
 GameObject:
   m_ObjectHideFlags: 0
@@ -1560,6 +1609,9 @@ MonoBehaviour:
   minGravDisableFrames: 2
   jumpForce: 200
   jumpHoldForce: 60
+  ActivationCost: 30
+  useCost: 0.5
+  energyComponent: {fileID: 1396254552}
 --- !u!1 &2136788828
 GameObject:
   m_ObjectHideFlags: 0

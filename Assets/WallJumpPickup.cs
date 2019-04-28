@@ -12,9 +12,14 @@ public class WallJumpPickup : Pickup
     }
 
     protected override void TriggerPickupLogic() {
-        overlaps[0].GetComponentInParent<MovementComponent>().CanWallStick = true;
+        if (pickedUp) {
+            return;
+        }
         var player = overlaps[0].GetComponentInParent<MovementComponent>().gameObject;
-        player.GetComponentInChildren<WallJump>().enabled = true;
+        if (player.GetComponentInChildren<WallJump>().ActivateWallJump()) {
+            pickedUp = true;
+        }
+
     }
 
     // Start is called before the first frame update

@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class MovementComponent : MonoBehaviour
 {
-    public bool CanSprint { get; set; }
+    public bool CanSprint { get; private set; }
 
     public bool CanWallStick { get; set; }
 
 
     bool disableMovement;
+
     [SerializeField]
     float xWalkMovementScaling = 1;
     [SerializeField]
@@ -30,6 +31,9 @@ public class MovementComponent : MonoBehaviour
     int maxEndWallClingFrames = 3;
     int currentEndWallClingFrames;
 
+    [SerializeField]
+    float ActivationCost = 20f;
+
     public bool WallClinging { get; private set;}
 
     LayerMask wallLayerMask;
@@ -42,11 +46,22 @@ public class MovementComponent : MonoBehaviour
 
     [SerializeField]
     GroundedComponenet groundedComponent;
+    
+    [SerializeField]
+    EnergyComponent energyComponent;
 
     // Start is called before the first frame update
     void Start()
     {
         wallLayerMask = LayerMask.GetMask(new string[] { "Wall" });
+    }
+
+    public bool ActivateSprint() {
+        if (energyComponent.SpendEnergy(ActivationCost)) {
+            CanSprint = true;
+            return true;
+        }
+        return false;
     }
 
     // Update is called once per frame

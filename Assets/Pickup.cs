@@ -6,6 +6,8 @@ abstract public class Pickup : MonoBehaviour
 {
     bool overlapping;
 
+    protected bool pickedUp;
+
     protected List<Collider2D> overlaps = new List<Collider2D>();
 
     protected void OnTriggerEnter2D(Collider2D collision) {
